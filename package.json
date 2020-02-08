@@ -1,0 +1,19 @@
+{
+  "name": "vue-ssr-csr",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/org-rondon/vue-ssr-csr.git"
+  },
+  "author": "Hemerson Vianna <hemerson.lourenco@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/org-rondon/vue-ssr-csr/issues"
+  },
+  "homepage": "https://github.com/org-rondon/vue-ssr-csr#readme"
+}
