@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/org-rondon/vue-ssr-csr/issues"
   },
-  "homepage": "https://github.com/org-rondon/vue-ssr-csr#readme"
+  "homepage": "https://github.com/org-rondon/vue-ssr-csr#readme",
+  "devDependencies": {
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4"
+  }
 }
