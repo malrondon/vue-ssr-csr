@@ -1,16 +1,19 @@
 {
   "presets": [
     [
-      "@babel/preset-env",
-      {
+      "@babel/preset-env", {
+        "corejs": 3,
         "targets": {
-          "browsers": ["last 2 versions", "safari >= 7"]
+          "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
         }
       }
     ]
   ],
-  "plugins": [
-    "@babel/plugin-syntax-dynamic-import",
-    "@babel/plugin-transform-async-to-generator"
-  ]
+  "plugins": ["@babel/plugin-syntax-dynamic-import", "@babel/plugin-transform-runtime"],
+  "env": {
+    "test": {
+      "presets": ["@babel/preset-env"],
+      "plugins": ["@babel/plugin-syntax-dynamic-import"]
+    }
+  }
 }
