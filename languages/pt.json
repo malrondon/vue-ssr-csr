@@ -1,0 +1,5 @@
+{
+	"showcase_static": "Olá mundo!",
+	"showcase_dynamic": "sem elementos | um elemento | {counter} elementos",
+	"site_name": "Nome do site"
+}

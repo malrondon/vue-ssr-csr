@@ -1,15 +1,21 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }
-  ]
-})
+import Home from "views/home";
+const NotFound = () => System.import("views/not-found");
+
+const routes = [
+	{ path: "/", component: Home }
+];
+
+routes.push({ path: "*", component: NotFound });
+
+export function createRouter() {
+	return new Router({
+		mode: "history",
+		scrollBehavior: () => ({ y: 0 }),
+		routes
+	})
+};
