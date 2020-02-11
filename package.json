@@ -2,6 +2,11 @@
   "name": "vue-ssr-csr",
   "version": "0.1.0",
   "scripts": {
+    "dev": "node server",
+    "start": "cross-env NODE_ENV=production node server",
+    "build": "rimraf dist && npm run build:client && npm run build:server",
+    "build:client": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.client.config.js --progress --hide-modules",
+    "build:server": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.server.config.js --progress --hide-modules",
     "release": "./node_modules/.bin/release-it --no-npm.publish --git.tagName='v${version}' --github.release"
   },
   "repository": {
@@ -20,7 +25,6 @@
     "core-js": "3.6.4",
     "es6-promise": "4.2.8",
     "express": "4.17.1",
-    "register-service-worker": "1.6.2",
     "serve-favicon": "2.5.0",
     "vue": "2.6.11",
     "vue-i18n": "8.15.3",
@@ -36,6 +40,22 @@
     "@babel/preset-env": "7.8.4",
     "@babel/register": "7.8.3",
     "@commitlint/cli": "8.3.5",
-    "@commitlint/config-conventional": "8.3.4"
+    "@commitlint/config-conventional": "8.3.4",
+    "autoprefixer": "9.7.4",
+    "cssnano": "4.1.10",
+    "eslint": "6.8.0",
+    "eslint-loader": "3.0.3",
+    "memory-fs": "0.5.0",
+    "node-sass": "4.13.1",
+    "sass-loader": "8.0.2",
+    "url-loader": "3.0.0",
+    "vue-loader": "15.8.3",
+    "webpack": "4.41.5",
+    "webpack-bundle-analyzer": "3.6.0",
+    "webpack-cli": "3.3.10",
+    "webpack-dev-middleware": "3.7.2",
+    "webpack-dev-server": "3.10.3",
+    "webpack-hot-middleware": "2.25.0",
+    "webpack-merge": "4.2.2"
   }
 }
