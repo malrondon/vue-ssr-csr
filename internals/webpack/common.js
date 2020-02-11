@@ -14,8 +14,9 @@ const messages = {
 	fallback: config.fallbackLanguage ? require(`../../languages/${config.fallbackLanguage.filename}`) : null
 }
 
-Vue.use(VueI18n)
-i18n = new VueI18n({
+Vue.use(VueI18n);
+
+const i18n = new VueI18n({
 	locale: "main",
 	fallbackLocale: messages.fallback ? "fallback" : null,
 	messages
