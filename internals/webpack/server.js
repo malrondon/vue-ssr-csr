@@ -1,21 +1,58 @@
-const webpack = require("webpack")
-const merge = require("webpack-merge")
-const base = require("./webpack.base.config")
-const VueSSRServerPlugin = require("vue-server-renderer/server-plugin")
+const path = require('path');
+const webpack = require('webpack');
+const nodeExternals = require('webpack-node-externals');
+const VueSSRServerPlugin = require("vue-server-renderer/server-plugin");
 
-module.exports = merge(base, {
-	target: "node",
-	devtool: "#source-map",
-	entry: "./source/server/entry.js",
-	output: {
-		filename: "server-bundle.js",
-		libraryTarget: "commonjs2"
-	},
-	externals: Object.keys(require("../../package.json").dependencies),
-	plugins: [
-		new webpack.DefinePlugin({
+const configVars = require('./config');
+const webpackCommon = require('./common');
+
+const commonConfig = webpackCommon('server');
+
+const config = {
+  name: 'server',
+  target: 'node',
+  mode: commonConfig.mode,
+  devtool: commonConfig.devtool,
+  resolve: commonConfig.resolve,
+  externals: [nodeExternals()],
+  entry: {
+    server: ['regenerator-runtime/runtime', path.resolve(__dirname, `../../source/server`, 'index')],
+  },
+  output: {
+    path: path.resolve(__dirname, '../../dist'),
+    libraryTarget: 'commonjs2',
+    filename: 'server.min.js',
+  },
+  optimization: {
+    // Prevent Duplication
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
+  node: {
+    __filename: false,
+    __dirname: false,
+  },
+  module: {
+    rules: [
+      ...commonConfig.preRule(),
+      ...commonConfig.babelRule(),
+      ...commonConfig.vueRule(),
+      ...commonConfig.fileRule(),
+      ...commonConfig.cssModulesRule(),
+      ...commonConfig.cssRule(),
+    ],
+  },
+  plugins: [
+    new webpack.DefinePlugin({
 			"process.env.VUE_ENV": "'server'"
 		}),
-		new VueSSRServerPlugin()
-	]
-})
+		new VueSSRServerPlugin(),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.EnvironmentPlugin({
+      ...configVars.env,
+    }),
+  ],
+};
+
+module.exports = config;

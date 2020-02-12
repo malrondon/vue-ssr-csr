@@ -1,0 +1,6 @@
+{
+  "watch": ["source/server"],
+  "execMap": {
+    "js": "babel-node"
+  }
+}

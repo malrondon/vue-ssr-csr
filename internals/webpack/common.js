@@ -1,12 +1,12 @@
-const path = require("path");
-const webpack = require("webpack");
-
-const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
-const StringReplacePlugin = require("string-replace-webpack-plugin");
-const StyleLintPlugin = require("stylelint-webpack-plugin");
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const Vue = require("vue");
 const VueI18n = require("vue-i18n");
+
+const { NODE_ENV } = process.env;
+const ISDEV = NODE_ENV === 'development';
+
 const config = require("../../config");
 
 const messages = {
@@ -20,22 +20,7 @@ const i18n = new VueI18n({
 	locale: "main",
 	fallbackLocale: messages.fallback ? "fallback" : null,
 	messages
-})
-
-const commonPlugins = [
-	new StringReplacePlugin(),
-	new webpack.DefinePlugin({
-		"process.env.NODE_ENV": JSON.stringify(config.nodeEnv),
-		"PRODUCTION": config.isProduction,
-
-		"LANGUAGE_MAIN_FILENAME": JSON.stringify(config.language.filename),
-		"LANGUAGE_FALLBACK_FILENAME": config.fallbackLanguage ? JSON.stringify(config.fallbackLanguage.filename) : null,
-		"LANGUAGE_ISRTL": config.language.isRTL
-	}),
-	new StyleLintPlugin({
-		files: ["source/**/*.vue", "source/**/*.scss"]
-	})
-]
+});
 
 const doI18n = StringReplacePlugin.replace({
 	replacements: [{
@@ -52,92 +37,179 @@ const doI18n = StringReplacePlugin.replace({
 			return i18n.tc(...params)
 		}
 	}]
-})
+});
 
-module.exports = {
-	devtool: config.isProduction
-		? false
-		: "inline-source-map",
+const commonConfig = target => {
+  const isClient = target === 'client';
+  const devtool = ISDEV ? 'cheap-module-source-map' : 'source-map';
+  const cssScopedName = '[name]_[local]_[hash:base64:5]';
+  const publicPath = '/';
 
-	entry: {
-		app: "./source/client/index.js"
-	},
+  return {
+    devtool,
+    publicPath,
+    mode: ISDEV ? 'development' : 'production',
+    output: {
+      path: path.resolve(__dirname, '../../dist'),
+      filename: `[name].min.js`,
+      chunkFilename: `chunk.min.js`,
+      publicPath: '/',
+    },
+    resolve: {
+      alias: {
+        "static": path.resolve(__dirname, "../../static"),
+        "src": path.resolve(__dirname, "../../source/"),
+        "components": path.resolve(__dirname, "../../source/components"),
+        "images": path.resolve(__dirname, "../../source/assets/images"),
+        "router": path.resolve(__dirname, "../../source/router"),
+        "store": path.resolve(__dirname, "../../source/store"),
+        "styles": path.resolve(__dirname, "../../source/assets/styles"),
+        "mixins": path.resolve(__dirname, "../../source/mixins"),
+        "views": path.resolve(__dirname, "../../source/views")
+      },
+      extensions: ['.js', '.jsx', '.scss', '.css'],
+    },
+    preRule() {
+      return [
+        {
+          enforce: 'pre',
+          test: /\.(vue|js)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'eslint-loader',
+          },
+        },
+      ];
+    },
+    babelRule() {
+      return [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: [{ loader: 'babel-loader' }],
+        },
+      ];
+    },
+    vueRule() {
+      return [
+        {
+          test: /\.vue$/,
+          use: [{
+            loader: 'vue-loader',
+            options: {
+              preLoaders: {
+                html: doI18n
+              },
+              preserveWhitespace: false,
+              postcss: [
+                require("autoprefixer")()
+              ]
+            }
+          }],
+        },
+      ];
+    },
+    cssModulesRule() {
+      const modules = true;
+      const localIdentName = cssScopedName;
+      const sourceMap = !!ISDEV;
 
-	output: {
-		path: path.resolve(__dirname, "../../dist"),
-		publicPath: "/dist/",
-		filename: "js/[name].[chunkhash:16].js"
-	},
+      return [
+        {
+          test: /\.scss$/,
+          include: [path.resolve(__dirname, '../../source')],
+          use: isClient
+            ? [
+                'css-hot-loader',
+                MiniCssExtractPlugin.loader,
+                {
+                  loader: 'css-loader',
+                  options: {
+                    modules,
+                    localIdentName,
+                    sourceMap,
+                    importLoaders: 2,
+                  },
+                },
+                {
+                  loader: 'postcss-loader',
+                  options: {
+                    plugins: () => [require('autoprefixer')],
+                  },
+                },
+                {
+                  loader: 'sass-loader',
+                  options: { sourceMap },
+                },
+              ]
+            : [
+                {
+                  loader: 'css-loader/locals',
+                  options: {
+                    modules,
+                    localIdentName,
+                  },
+                },
+                'sass-loader',
+              ],
+        },
+      ];
+    },
+    cssRule() {
+      return [
+        {
+          test: /\.css$/,
+          include: [path.resolve(__dirname, '../../node_modules/<package>/dist/')],
+          use: isClient
+            ? [
+                'css-hot-loader',
+                MiniCssExtractPlugin.loader,
+                {
+                  loader: 'css-loader',
+                },
+              ]
+            : [
+                {
+                  loader: 'css-loader/locals',
+                },
+              ],
+        },
+      ];
+    },
+    fileRule() {
+      const loaders = options => [
+        {
+          loader: 'url-loader',
+          options: Object.assign(
+            {
+              publicPath,
+              fallback: 'file-loader',
+              limit: 10240,
+              emitFile: !!isClient,
+            },
+            options
+          ),
+        },
+      ];
 
-	resolve: {
-		alias: {
-			"static": path.resolve(__dirname, "../../static"),
-			"src": path.resolve(__dirname, "../../source/"),
-			"components": path.resolve(__dirname, "../../source/components"),
-			"images": path.resolve(__dirname, "../../source/assets/images"),
-			"router": path.resolve(__dirname, "../../source/router"),
-			"store": path.resolve(__dirname, "../../source/store"),
-			"styles": path.resolve(__dirname, "../../source/assets/styles"),
-			"mixins": path.resolve(__dirname, "../../source/mixins"),
-			"views": path.resolve(__dirname, "../../source/views")
-		},
-    extensions: ['.js', '.vue', '.scss']
-	},
-	resolveLoader: {
-		alias: {
-			'scss-loader': 'sass-loader'
-		}
-	},
-	module: {
-		noParse: /es6-promise\.js$/,
-		rules: [
-			{
-				enforce: "pre",
-				test: /\.(vue|js)$/,
-				loader: "eslint-loader",
-				exclude: /node_modules/
-			},
-			{
-				test: /\.vue$/,
-				loader: "vue-loader",
-				options: {
-					preLoaders: {
-						pug: doI18n,
-						html: doI18n
-					},
-					preserveWhitespace: false,
-					postcss: [
-						require("autoprefixer")({browsers: ["last 3 versions"]}),
-						require("cssnano")
-					]
-				}
-			},
-			{
-				test: /\.js$/,
-				loader: "babel-loader",
-				exclude: /node_modules/
-			},
-			{
-				test: /\.(png|jpe?g|gif|svg|ico)(\?.*)?$/,
-				loader: "url-loader",
-				options: {
-					limit: 10000,
-					name: "img/[name].[hash:16].[ext]"
-				}
-			},
-			{
-				test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-				loader: "url-loader?limit=10000"
-			}
-		]
-	},
+      return [
+        {
+          test: /\.(svg|png|jpe?g|gif|ico)(\?.*)?$/i,
+          use: loaders({ name: '[name].[ext]' }),
+        },
+        {
+          test: /\.(eot|ttf|woff2?)(\?.*)?$/i,
+          use: loaders({ name: '[name].[ext]' }),
+        },
+      ];
+    },
+  };
+};
 
-	performance: {
-		maxEntrypointSize: 250000,
-		hints: config.isProduction ? "warning" : false
-	},
+module.exports = commonConfig;
 
-	plugins: config.isProduction ? commonPlugins : commonPlugins.concat([
-		new FriendlyErrorsPlugin()
-	])
-}
+// new webpack.DefinePlugin({
+//   "LANGUAGE_MAIN_FILENAME": JSON.stringify(config.language.filename),
+//   "LANGUAGE_FALLBACK_FILENAME": config.fallbackLanguage ? JSON.stringify(config.fallbackLanguage.filename) : null,
+//   "LANGUAGE_ISRTL": config.language.isRTL
+// })

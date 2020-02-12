@@ -2,18 +2,42 @@
   "presets": [
     [
       "@babel/preset-env", {
-        "corejs": 3,
         "targets": {
-          "browsers": ["> 1%", "last 2 versions", "not ie <= 8"]
-        }
+          "browsers": ["last 2 versions", "IE >= 8"],
+          "node": "current"
+        },
       }
     ]
   ],
-  "plugins": ["@babel/plugin-syntax-dynamic-import", "@babel/plugin-transform-runtime"],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": 3
+      }
+    ],
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-export-default-from",
+    "@babel/plugin-proposal-export-namespace-from",
+    "@babel/plugin-transform-arrow-functions",
+    "transform-react-remove-prop-types"
+  ],
   "env": {
-    "test": {
-      "presets": ["@babel/preset-env"],
-      "plugins": ["@babel/plugin-syntax-dynamic-import"]
-    }
+    "static": {
+      "plugins": [
+        "transform-inline-environment-variables",
+        "transform-es2015-template-literals",
+        [
+          "@babel/plugin-transform-runtime",
+          {
+            "corejs": false,
+            "helpers": false,
+            "regenerator": false,
+            "useESModules": false
+          }
+        ],
+      ]
+    },
   }
 }

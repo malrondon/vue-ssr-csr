@@ -1,103 +1,63 @@
-const fs = require("fs");
-const path = require("path");
-const compression = require("compression");
-const express = require("express");
+import path from 'path';
+import compression from 'compression';
+import express from 'express';
+import bodyParser from 'body-parser';
+import dnscache from 'dnscache';
+import pkg from '../../package.json';
+
+const PORT = process.env.PORT || 8000;
 const app = express();
 
-const favicon = require('serve-favicon');
+// New Relic
+global.newrelic = require('newrelic');
 
-const resolve = (file) => path.resolve(__dirname, file);
+app.use(require('cookie-parser')());
 
-const config = require("../../config");
-const isProduction = config.isProduction;
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
 
-const template = fs.readFileSync(resolve("../shared/index.template.html"), "utf-8");
+// parse application/json
+app.use(bodyParser.json());
 
-const createRenderer = (bundle, options) => {
-	// https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
-	return require("vue-server-renderer").createBundleRenderer(bundle, Object.assign(options, {
-		template,
-		cache: require("lru-cache")({
-			max: 1000,
-			maxAge: 1000 * 60 * 15
-		}),
-		basedir: resolve("../../dist"),
-		runInNewContext: false
-	}))
+dnscache({
+  enable: true,
+  ttl: 300,
+  cachesize: 1000,
+});
+
+/* Setup */
+app.disable('x-powered-by');
+
+/* Middlewares */
+if (process.env.NODE_ENV === 'development') {
+  const webpackMiddlewares = require('./middlewares/webpack').default;
+  app.use(...webpackMiddlewares);
+  app.use('/dist/', require('./middlewares/static').default);
 }
 
-const serve = (path, cache) => express.static(resolve(path), {
-	maxAge: cache && isProduction ? 60 * 60 * 24 * 30 : 0
-})
+app.use(compression());
+app.use(express.static('dist'));
 
-let renderer
-let readyPromise
-if (isProduction) {
-	const bundle = require("../../dist/vue-ssr-server-bundle.json");
-	const clientManifest = require("../../dist/vue-ssr-client-manifest.json");
-	renderer = createRenderer(bundle, {
-		clientManifest
-	})
-	readyPromise = Promise.resolve()
-} else {
-	readyPromise = require("../../internals/webpack/setup-dev-server")(app, (bundle, options) => {
-		renderer = createRenderer(bundle, options);
-	})
-}
+app.use('/mock', require('./controllers/mock').default);
 
-const render = (req, res, context) => {
-	const s = Date.now()
+app.get('/offline', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../../../dist/offline/index.html'));
+});
 
-	console.log(`Rendering: ${req.url}`)
+app.use('/health', require('./controllers/health').default);
+app.use('/resource-status', require('./controllers/resource-status').default);
 
-	res.setHeader("Content-Type", "text/html")
+app.use('/', require('./controllers/app').default);
+app.use(require('./controllers/error').default);
 
-	const errorHandler = (err) => {
-		// TODO: Render Error Page
-		console.error(`Fatal error when rendering : ${req.url}`)
-		console.error(err)
-
-		res.status(500)
-		res.end(`500 | Fatal error: ${err}`)
-
-		console.log(`Whole request: ${Date.now() - s}ms`)
-	}
-
-	renderer.renderToString(context, (err, html) => {
-		if (err) return errorHandler(err)
-
-		res.status(context.meta.httpStatusCode || 200)
-		res.end(html)
-
-		console.log(`Whole request: ${Date.now() - s}ms`)
-	})
-}
-
-app.use(compression({ threshold: 0 }))
-app.use(favicon('../../static/favicon.png'))
-
-app.use("/dist", serve("../../dist", true))
-app.use("/static", serve("../../static", true))
-app.use("/service-worker.js", serve("../../dist/service-worker.js"))
-
-app.get("*", (req, res) => {
-	const context = {
-		url: req.url
-	}
-
-	isProduction ?
-		render(req, res, context) :
-		readyPromise.then(() => render(req, res, context))
-})
-
-const port = config.server.port
-let server = app.listen(port, () => {
-	console.log(`Server started at localhost:${port}`)
-})
-
-module.exports = {
-	ready: readyPromise,
-	close: () => {
-		server.close()
-	}
-}
+// START SERVER
+/* eslint-disable */
+const server = app.listen(PORT, () => console.log(`
+WEB APP
+Name:        ${pkg.name}
+Version:     ${pkg.version}
+NODE_ENV:    ${process.env.NODE_ENV}
+Server running on ${process.env.PUBLIC_URL || 'localhost'}:${PORT}
+`));
+server.timeout = 5000;
+/* eslint-enable */
