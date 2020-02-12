@@ -4,9 +4,25 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import dnscache from 'dnscache';
 import pkg from '../../package.json';
+import { createBundleRenderer } from 'vue-server-renderer';
+
+import serverBundle from '../../dist/vue-ssr-server-bundle.json';
+import clientManifest from '../../dist/vue-ssr-client-manifest.json';
 
 const PORT = process.env.PORT || 8000;
 const app = express();
+
+const template = require('fs').readFileSync(
+  path.join(__dirname, '../shared/index.template.html'),
+  'utf-8',
+);
+
+const renderer = createBundleRenderer(serverBundle, {
+  runInNewContext: false,
+  template,
+  clientManifest,
+  inject: false,
+});
 
 // New Relic
 global.newrelic = require('newrelic');
@@ -47,7 +63,15 @@ app.get('/offline', (req, res) => {
 app.use('/health', require('./controllers/health').default);
 app.use('/resource-status', require('./controllers/resource-status').default);
 
-app.use('/', require('./controllers/app').default);
+app.use('/', (req, res) => {
+  const context = { url: req.url };
+
+  renderer.renderToString(context, (err, html) => {
+    if (!err) {
+      res.end(html);
+    }
+  });
+});
 app.use(require('./controllers/error').default);
 
 // START SERVER

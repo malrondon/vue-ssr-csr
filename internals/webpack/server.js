@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const VueSSRServerPlugin = require("vue-server-renderer/server-plugin");
 
 const configVars = require('./config');
@@ -44,6 +45,7 @@ const config = {
     ],
   },
   plugins: [
+    new VueLoaderPlugin(),
     new webpack.DefinePlugin({
 			"process.env.VUE_ENV": "'server'"
 		}),

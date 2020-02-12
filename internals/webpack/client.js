@@ -6,9 +6,9 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const StatsWebpackPlugin = require('stats-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const VueSSRClientPlugin = require("vue-server-renderer/client-plugin");
 const merge = require('webpack-merge');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const configVars = require('./config');
 const webpackCommon = require('./common');
@@ -74,6 +74,7 @@ const config = {
     ],
   },
   plugins: [
+    new VueLoaderPlugin(),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
     }),

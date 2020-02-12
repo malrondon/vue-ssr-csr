@@ -37,3 +37,4 @@ export function createApp(ssrContext) {
 
 	return { app, router, store };
 };
+

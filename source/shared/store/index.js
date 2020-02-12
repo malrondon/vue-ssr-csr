@@ -19,17 +19,3 @@ export function createStore() {
 		mutations
 	})
 };
-
-/*
-// TODO: move to client/index.js
-if (module.hot) {
-	module.hot.accept([
-		"./actions",
-		"./mutations"
-	], () => {
-		store.hotUpdate({
-			actions: require("./actions").actions,
-			mutations: require("./mutations").mutations
-		})
-	})
-}*/

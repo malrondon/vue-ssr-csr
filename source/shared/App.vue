@@ -1,23 +1,27 @@
 <template>
-  <div id="app">
-    <img src="./assets/images/logo.png">
-    <router-view/>
+  <div>
+    <div :class="$style.links">
+      <router-link to="/" :class="$style.link">Main</router-link>
+      <router-link to="/about" :class="$style.link">About</router-link>
+    </div>
+    <router-view></router-view>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App'
+<style module>
+.link {
+  border: 1px solid rgba(65, 86, 255, 0.79);
+  padding: 8px;
+  color: #394fcc;
+  text-decoration: none;
 }
-</script>
+.links {
+  margin: 16px 0 56px;
+}
+</style>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  body {
+    font-family: Arial, sans-serif;
+  }
 </style>
