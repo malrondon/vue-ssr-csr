@@ -1,5 +1,9 @@
 {
-  "watch": ["source/server"],
+  "watch": [
+    "source/server",
+    "source/shared/index.template.html",
+    "source/middlewares/webpack.js"
+  ],
   "execMap": {
     "js": "babel-node"
   }

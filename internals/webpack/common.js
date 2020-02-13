@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const StringReplacePlugin = require('string-replace-webpack-plugin');
 
 const Vue = require("vue");
 const VueI18n = require("vue-i18n");
@@ -56,25 +57,14 @@ const commonConfig = target => {
       publicPath: '/',
     },
     resolve: {
-      alias: {
-        "static": path.resolve(__dirname, "../../static"),
-        "src": path.resolve(__dirname, "../../source/"),
-        "components": path.resolve(__dirname, "../../source/components"),
-        "images": path.resolve(__dirname, "../../source/assets/images"),
-        "router": path.resolve(__dirname, "../../source/router"),
-        "store": path.resolve(__dirname, "../../source/store"),
-        "styles": path.resolve(__dirname, "../../source/assets/styles"),
-        "mixins": path.resolve(__dirname, "../../source/mixins"),
-        "views": path.resolve(__dirname, "../../source/views")
-      },
-      extensions: ['.js', '.jsx', '.scss', '.css'],
+      extensions: ['.js', '.vue', '.scss', '.css'],
     },
     preRule() {
       return [
         {
           enforce: 'pre',
           test: /\.(vue|js)$/,
-          exclude: /node_modules/,
+          exclude: /node_modules|internals|config/,
           use: {
             loader: 'eslint-loader',
           },
@@ -207,9 +197,3 @@ const commonConfig = target => {
 };
 
 module.exports = commonConfig;
-
-// new webpack.DefinePlugin({
-//   "LANGUAGE_MAIN_FILENAME": JSON.stringify(config.language.filename),
-//   "LANGUAGE_FALLBACK_FILENAME": config.fallbackLanguage ? JSON.stringify(config.fallbackLanguage.filename) : null,
-//   "LANGUAGE_ISRTL": config.language.isRTL
-// })

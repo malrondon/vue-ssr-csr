@@ -1,24 +1,23 @@
-import { createApp } from "../shared/app";
+import { createApp } from '../shared/app';
 
-export default context =>
-  new Promise((resolve, reject) => {  // eslint-disable-line
-    const { app, router, store } = createApp();
+export default context => {
+  return new Promise((resolve, reject) => {
+    const { app, router, store } = createApp(context);
     const meta = app.$meta();
 
     router.push(context.url);
+
     context.meta = meta;
 
     router.onReady(() => {
+      const matchedComponents = router.getMatchedComponents();
+      if (!matchedComponents.length) {
+        return reject(new Error({ code: 404 }));
+      }
       context.rendered = () => {
         context.state = store.state;
       };
-
-      const matchedComponents = router.getMatchedComponents();
-
-      if (!matchedComponents.length) {
-        return reject(new Error(404));
-      }
-
-      return resolve(app);
+      resolve(app);
     }, reject);
   });
+};

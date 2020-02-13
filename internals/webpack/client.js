@@ -8,7 +8,8 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const VueSSRClientPlugin = require("vue-server-renderer/client-plugin");
-const merge = require('webpack-merge');
+const StringReplacePlugin = require("string-replace-webpack-plugin");
+const HTMLPlugin = require('html-webpack-plugin');
 
 const configVars = require('./config');
 const webpackCommon = require('./common');
@@ -74,7 +75,15 @@ const config = {
     ],
   },
   plugins: [
+		new VueSSRClientPlugin(),
     new VueLoaderPlugin(),
+    new webpack.DefinePlugin({
+			"process.env.VUE_ENV": "'client'"
+		}),
+		new HTMLPlugin({
+			template: "source/shared/index.template.html"
+		}),
+    new StringReplacePlugin(),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
     }),
@@ -110,18 +119,4 @@ const config = {
   },
 };
 
-const clientConfig = merge(config, {
-	plugins: [
-		new webpack.DefinePlugin({
-			"process.env.VUE_ENV": "'client'"
-		}),
-		new HTMLPlugin({
-			template: "source/shared/index.template.html",
-			minify: config.isProduction ? minifyOptions : {}
-		}),
-		new VueSSRClientPlugin()
-	]
-})
-
-
-module.exports = clientConfig;
+module.exports = config;

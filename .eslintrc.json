@@ -41,9 +41,6 @@
     "max-len": "off",
     "new-cap": "off",
     "quote-props": ["error", "as-needed"],
-    "react/jsx-uses-react": "error",
-    "react/jsx-uses-vars": "error",
-    "jsx-quotes": ["error", "prefer-double"],
     "comma-dangle": "off",
     "space-after-keywords": "off",
     "semi": "off",
@@ -63,7 +60,6 @@
       "maxEOF": 1
     }],
     "prefer-template": "error",
-    "react/no-array-index-key": "error",
     "prefer-destructuring": ["error", {
       "array": true,
       "object": true

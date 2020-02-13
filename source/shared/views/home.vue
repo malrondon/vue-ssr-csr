@@ -1,19 +1,42 @@
-<template lang="html">
-	<main class="view--home">
-    <h1>Home Page</h1>
-    <p>Hello there!</p>
-    <p>In the showcase you can see some of the features offered by this project</p>
-  </main>
+<template>
+  <div>
+    <router-link to="/about">Go to About page</router-link>
+    <header :users="users"></header>
+  </div>
 </template>
 
 <script>
-export default {
-	name: "Home",
-	meta() {
-		return {
-			title: "Home",
-			description: "This is the meta description for the home page"
-		}
-	}
-}
+  import {mapGetters} from 'vuex';
+  import Header from '../components/header/index.vue';
+
+  export default {
+    name: 'Home',
+    metaInfo: {
+      title: 'Vue SSR Simple Setup Home',
+      meta: [
+        { name: 'description', content: 'Home page description' }
+      ]
+    },
+    components: {
+      Header,
+    },
+    computed: {
+      ...mapGetters({
+        users: 'users',
+      })
+    },
+    serverPrefetch () {
+      return this.getUsers();
+    },
+    mounted () {
+      if (!this.users.length) {
+        this.getUsers();
+      }
+    },
+    methods: {
+      getUsers () {
+        return this.$store.dispatch('getUsers');
+      }
+    }
+  };
 </script>
