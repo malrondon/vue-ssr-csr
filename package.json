@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node dist/server.min.js",
     "start_dev": "./node_modules/.bin/cross-env NODE_ENV=development BABEL_ENV=development nodemon source/server/index.js",
-    "start:development": "npm run clean && npm run build:static && npm run build:server && npm run start_dev",
+    "start:development": "npm run clean && npm run build:static && npm run start_dev",
     "clean": "./node_modules/.bin/rimraf 'dist'",
     "prebuild": "npm run clean",
     "build": "./node_modules/.bin/cross-env NODE_ENV=production BABEL_ENV=production run-p build:*",
@@ -79,7 +79,6 @@
     "css-hot-loader": "1.4.4",
     "css-loader": "3.4.2",
     "eslint": "6.8.0",
-    "eslint-config-google": "0.14.0",
     "eslint-loader": "3.0.3",
     "eslint-plugin-import": "2.20.1",
     "eslint-plugin-prettier": "3.1.2",

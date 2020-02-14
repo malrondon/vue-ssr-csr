@@ -1,17 +1,14 @@
 const path = require('path');
 
-const { NODE_ENV } = process.env;
-const ISDEV = NODE_ENV === 'development';
-
 const preRule = require('./pre-rule');
 const babelRule = require('./babel-rule');
 const vueRule = require('./vue-rule');
 const cssModulesRule = require('./css-modules-rule');
 const cssRule = require('./css-rule');
 const fileRule = require('./file-rule');
-const i18n = require('./i18n');
 
-i18n.init();
+const { NODE_ENV } = process.env;
+const ISDEV = NODE_ENV === 'development';
 
 const commonConfig = target => {
   const isClient = target === 'client';
@@ -34,12 +31,12 @@ const commonConfig = target => {
     },
     preRule,
     babelRule,
-    cssRule,
-    vueRule() {
-      return vueRule(i18n.doI18n)
+    vueRule,
+    cssRule() {
+      return cssRule(isClient);
     },
     cssModulesRule() {
-      return cssModulesRule(ISDEV, cssScopedName);
+      return cssModulesRule(ISDEV, isClient, cssScopedName);
     },
     fileRule() {
       return fileRule(isClient, publicPath)

@@ -1,13 +1,10 @@
-module.exports = (doI18n) => {
+module.exports = () => {
   return [
     {
       test: /\.vue$/,
       use: [{
         loader: 'vue-loader',
         options: {
-          preLoaders: {
-            html: doI18n
-          },
           preserveWhitespace: false,
           postcss: [
             require("autoprefixer")()

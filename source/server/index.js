@@ -4,14 +4,14 @@ import compression from 'compression';
 import express from 'express';
 import bodyParser from 'body-parser';
 import dnscache from 'dnscache';
-import vueServerRenderer from 'vue-server-renderer';
+import { createBundleRenderer } from 'vue-server-renderer';
 import pkg from '../../package.json';
 
 const PORT = process.env.PORT || 8000;
 const app = express();
 
 const createRenderer = bundle =>
-  vueServerRenderer.createBundleRenderer(bundle, {
+  createBundleRenderer(bundle, {
     runInNewContext: false,
     template: fs.readFileSync(path.resolve(__dirname, '../shared/index.template.html'), 'utf-8'),
   });
@@ -60,14 +60,21 @@ app.get('/offline', (req, res) => {
 app.use('/health', require('./controllers/health').default);
 app.use('/resource-status', require('./controllers/resource-status').default);
 
-app.use('/', (req, res) => {
-  const context = { url: req.url };
-
-  renderer.renderToString(context, (err, html) => {
-    if (!err) {
-      res.end(html);
+app.use('/', async (req, res) => {
+  const context = {
+    url: req.url,
+    state: {
+      title: 'Vue SSR CSR',
+      users: [{ id: 0, name: 'Hemerson', lastname: 'Vianna' }]
     }
-  });
+  };
+  let html;
+
+  try {
+    html = await renderer.renderToString(context);
+  } catch (error) {}
+
+  res.end(html);
 });
 app.use(require('./controllers/error').default);
 

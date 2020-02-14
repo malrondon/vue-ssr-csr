@@ -1,13 +1,13 @@
 <template>
   <div>
     <router-link to="/about">Go to About page</router-link>
-    <header :users="users"></header>
+    <the-header :users="users" />
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex';
-  import Header from '../components/header/index.vue';
+  import TheHeader from '../components/header/index.vue';
 
   export default {
     name: 'Home',
@@ -18,7 +18,7 @@
       ]
     },
     components: {
-      Header,
+      TheHeader,
     },
     computed: {
       ...mapGetters({

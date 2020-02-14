@@ -1,7 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
-module.exports = () => {
+module.exports = (isClient) => {
   return [
     {
       test: /\.css$/,

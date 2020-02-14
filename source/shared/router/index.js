@@ -6,14 +6,14 @@ import NotFound from '../views/not-found.vue';
 
 Vue.use(Router);
 
-const routes = [{ name: 'home', path: '/', component: Home }];
-
-routes.push({ path: '*', component: NotFound });
+const routes = [
+  { name: 'home', path: '/', component: Home },
+  { name: 'notfound', path: '*', component: NotFound }
+];
 
 export function createRouter() {
   return new Router({
     mode: 'history',
-    scrollBehavior: () => ({ y: 0 }),
     routes,
   });
 }

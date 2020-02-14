@@ -1,7 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
-module.exports = (ISDEV, cssScopedName) => {
+module.exports = (ISDEV, isClient, cssScopedName) => {
   const modules = true;
   const localIdentName = cssScopedName;
   const sourceMap = !!ISDEV;

@@ -6,21 +6,15 @@
     "es6": true
   },
   "extends": [
-    "eslint:recommended",
-    "google"
+    "plugin:vue/recommended"
   ],
   "plugins": [
     "vue",
     "prettier",
     "import"
   ],
-  "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "parser": "babel-eslint"
   },
   "globals": {
     "Atomics": "readonly",
@@ -32,39 +26,29 @@
     "it": true
   },
   "rules": {
-    "indent": ["error", 2, {"SwitchCase": 1}],
-    "no-debugger": "off",
-    "no-useless-escape": "off",
-    "no-case-declarations": "warn",
-    "require-jsdoc": "off",
-    "no-console": "off",
-    "max-len": "off",
-    "new-cap": "off",
-    "quote-props": ["error", "as-needed"],
-    "comma-dangle": "off",
-    "space-after-keywords": "off",
-    "semi": "off",
-    "object-curly-spacing": "off",
-    "arrow-parens": ["error", "as-needed"],
-    "import/first": ["error"],
-    "import/newline-after-import": ["error"],
-    "import/order": ["error", {"groups": ["builtin", "external"]}],
-    "prettier/prettier": ["error", {"trailingComma": "es5", "singleQuote": true, "printWidth": 120}],
-    "keyword-spacing": ["error", {
-      "before": true,
-      "after": true
+    "vue/multiline-html-element-content-newline": 0,
+    "max-len": [
+      2,
+      {
+        "code": 150,
+        "tabWidth": 2,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
+      }
+    ],
+    "vue/singleline-html-element-content-newline": ["error", {
+      "ignoreWhenNoAttributes": true,
+      "ignoreWhenEmpty": true,
+      "ignores": ["router-link", "router-view"]
     }],
-    "no-multiple-empty-lines": ["error", {
-      "max": 1,
-      "maxBOF": 1,
-      "maxEOF": 1
-    }],
-    "prefer-template": "error",
-    "prefer-destructuring": ["error", {
-      "array": true,
-      "object": true
-    }, {
-      "enforceForRenamedProperties": false
+    "vue/max-attributes-per-line": ["error", {
+      "singleline": 3,
+      "multiline": {
+        "max": 1,
+        "allowFirstLine": false
+      }
     }]
   }
 }
