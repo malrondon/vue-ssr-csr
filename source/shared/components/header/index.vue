@@ -1,11 +1,6 @@
 <template>
   <header class="header">
-    <router-link class="header-link" to="/">
-      <img class="header-logo" src="../../assets/images/logo.png" alt="Logo">
-      <div class="header-name">
-        <h3 class="header-title">Site Name</h3>
-      </div>
-    </router-link>
+    <h3>Header</h3>
     <ul>
       <li v-for="user in users" :key="user.id">
         {{ user.name }} {{ user.lastname }}

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <router-link to="/">Go to Home page</router-link>
-    <h1>404 page</h1>
+    <router-link to="/">Home</router-link>
+    <h1>404</h1>
   </div>
 </template>
 <script>

@@ -13,7 +13,7 @@ const app = express();
 const createRenderer = bundle =>
   createBundleRenderer(bundle, {
     runInNewContext: false,
-    template: fs.readFileSync(path.resolve(__dirname, '../shared/index.template.html'), 'utf-8'),
+    template: fs.readFileSync(path.resolve(__dirname, '../shared/index.template.html'), 'utf-8')
   });
 let renderer;
 
@@ -37,6 +37,9 @@ dnscache({
 /* Setup */
 app.disable('x-powered-by');
 
+app.use(compression());
+app.use(express.static(path.resolve(__dirname, '../../dist')));
+
 /* Middlewares */
 if (process.env.NODE_ENV === 'development') {
   const setupDevServer = require('./middlewares/webpack').default;
@@ -48,9 +51,6 @@ if (process.env.NODE_ENV === 'development') {
   renderer = createRenderer(require('../../dist/vue-ssr-server-bundle.json'));
 }
 
-app.use(compression());
-app.use(express.static('dist'));
-
 app.use('/mock', require('./controllers/mock').default);
 
 app.get('/offline', (req, res) => {
@@ -60,12 +60,20 @@ app.get('/offline', (req, res) => {
 app.use('/health', require('./controllers/health').default);
 app.use('/resource-status', require('./controllers/resource-status').default);
 
+app.get('/users', (req, res) => {
+  res.json([
+    { id: 0, name: 'Hemerson', lastname: 'Vianna' },
+    { id: 0, name: 'Nerd', lastname: 'Calistênico' },
+    { id: 0, name: 'IMHO', lastname: 'Movies' }
+  ]);
+});
+
 app.use('/', async (req, res) => {
   const context = {
     url: req.url,
     state: {
       title: 'Vue SSR CSR',
-      users: [{ id: 0, name: 'Hemerson', lastname: 'Vianna' }]
+      users: []
     }
   };
   let html;

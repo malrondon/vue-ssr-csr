@@ -9,7 +9,7 @@
     "prebuild": "npm run clean",
     "build": "./node_modules/.bin/cross-env NODE_ENV=production BABEL_ENV=production run-p build:*",
     "build:static": "./node_modules/.bin/cross-env BABEL_ENV=static ./node_modules/.bin/babel source/static --out-dir dist --copy-files",
-    "build:server": "./node_modules/.bin/cross-env BABEL_ENV=server NODE_ENV=production ./node_modules/.bin/webpack --config ./internals/webpack/server.js",
+    "build:server": "./node_modules/.bin/cross-env BABEL_ENV=server ./node_modules/.bin/webpack --config ./internals/webpack/server.js",
     "build:client": "./node_modules/.bin/cross-env BABEL_ENV=client ./node_modules/.bin/webpack --config ./internals/webpack/client.js",
     "build_analyze": "./node_modules/.bin/cross-env ANALYZE_MODE=enabled run-p build:*",
     "lint": "run-p lint:*",

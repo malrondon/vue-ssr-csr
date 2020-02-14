@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/about">Go to About page</router-link>
+    <router-link to="/about">Sobre</router-link>
     <the-header :users="users" />
   </div>
 </template>
@@ -12,9 +12,9 @@
   export default {
     name: 'Home',
     metaInfo: {
-      title: 'Vue SSR Simple Setup Home',
+      title: 'Home',
       meta: [
-        { name: 'description', content: 'Home page description' }
+        { vmid: 'description', name: 'description', content: 'Home page description' }
       ]
     },
     components: {
@@ -29,8 +29,8 @@
       return this.getUsers();
     },
     mounted () {
-      if (!this.users.length) {
-        this.getUsers();
+      if (!this.users || !this.users.length) {
+        // this.getUsers();
       }
     },
     methods: {

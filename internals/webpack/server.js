@@ -48,9 +48,6 @@ const config = {
     ],
   },
   plugins: [
-    new webpack.DefinePlugin({
-			"process.env.VUE_ENV": "'server'"
-		}),
     new VueLoaderPlugin(),
     new VueSSRServerPlugin(),
     new StringReplacePlugin(),

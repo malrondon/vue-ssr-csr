@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import Meta from 'vue-meta';
 //import VueI18n from 'vue-i18n';
-import { sync } from 'vuex-router-sync';
 // import { LANGUAGE_MAIN_FILENAME } from './config';
 
 import createStore from './store';
@@ -29,8 +28,6 @@ export const createApp = context => {
 
   const store = createStore(context.state);
   const router = createRouter();
-
-  sync(store, router);
 
   const app = new Vue({
     router,
