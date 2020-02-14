@@ -1,6 +1,6 @@
 {
   "name": "vue-ssr-csr",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "scripts": {
     "start": "node dist/server.min.js",
     "start_dev": "./node_modules/.bin/cross-env NODE_ENV=development BABEL_ENV=development nodemon source/server/index.js",
