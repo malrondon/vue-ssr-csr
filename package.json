@@ -100,6 +100,7 @@
     "precss": "4.0.0",
     "prettier": "1.19.1",
     "regenerator-runtime": "0.13.3",
+    "release-it": "12.4.3",
     "rimraf": "3.0.2",
     "sass-loader": "8.0.2",
     "stats-webpack-plugin": "0.7.0",
