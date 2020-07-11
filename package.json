@@ -19,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/org-rondon/vue-ssr-csr.git"
+    "url": "git+https://github.com/malrondon/vue-ssr-csr.git"
   },
   "author": "Hemerson Vianna <hemerson.lourenco@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/org-rondon/vue-ssr-csr/issues"
+    "url": "https://github.com/malrondon/vue-ssr-csr/issues"
   },
-  "homepage": "https://github.com/org-rondon/vue-ssr-csr#readme",
+  "homepage": "https://github.com/malrondon/vue-ssr-csr#readme",
   "dependencies": {
     "@babel/node": "7.8.4",
     "@babel/plugin-transform-runtime": "7.8.3",

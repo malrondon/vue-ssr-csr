@@ -1,12 +1,12 @@
 # Vue SSR and CSR
 
 [![licence mit](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](http://hemersonvianna.mit-license.org/)
-[![GitHub issues](https://img.shields.io/github/issues/org-rondon/vue-ssr-csr.svg)](https://github.com/org-rondon/vue-ssr-csr/issues)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/org-rondon/vue-ssr-csr.svg)
-![GitHub Release Date](https://img.shields.io/github/release-date/org-rondon/vue-ssr-csr.svg)
-![GitHub top language](https://img.shields.io/github/languages/top/org-rondon/vue-ssr-csr.svg)
-![GitHub repo size](https://img.shields.io/github/repo-size/org-rondon/vue-ssr-csr.svg)
-![GitHub All Releases](https://img.shields.io/github/downloads/org-rondon/vue-ssr-csr/total.svg)
+[![GitHub issues](https://img.shields.io/github/issues/malrondon/vue-ssr-csr.svg)](https://github.com/malrondon/vue-ssr-csr/issues)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/malrondon/vue-ssr-csr.svg)
+![GitHub Release Date](https://img.shields.io/github/release-date/malrondon/vue-ssr-csr.svg)
+![GitHub top language](https://img.shields.io/github/languages/top/malrondon/vue-ssr-csr.svg)
+![GitHub repo size](https://img.shields.io/github/repo-size/malrondon/vue-ssr-csr.svg)
+![GitHub All Releases](https://img.shields.io/github/downloads/malrondon/vue-ssr-csr/total.svg)
 
 ## Prerequisites
 
@@ -75,7 +75,7 @@ Questions and answers:
 
 ## Log
 
-Check [Releases](https://github.com/org-rondon/vue-ssr-csr/releases) for detailed changelog.
+Check [Releases](https://github.com/malrondon/vue-ssr-csr/releases) for detailed changelog.
 
 ## License
 
