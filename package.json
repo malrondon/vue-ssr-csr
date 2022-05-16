@@ -41,7 +41,7 @@
     "core-js": "3.6.4",
     "cross-env": "7.0.0",
     "dnscache": "1.0.2",
-    "ejs": "3.0.1",
+    "ejs": "3.1.7",
     "es6-promise": "4.2.8",
     "express": "4.17.1",
     "newrelic": "6.3.0",
